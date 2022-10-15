@@ -86,7 +86,8 @@ attempts.sumgrades/quiz.sumgrades < 1
 ) as sql_embed
   
 LEFT JOIN prefix_quiz_overrides qover 
-	ON qover.quiz = sql_embed.quizid AND qover.userid = sql_embed.userid 
+	ON qover.quiz = sql_embed.quizid 
+	AND qover.userid = sql_embed.userid 
 WHERE (qover.attempts is null OR qover.attempts = sql_embed.attempt)
   
  ) AS attempt_join
