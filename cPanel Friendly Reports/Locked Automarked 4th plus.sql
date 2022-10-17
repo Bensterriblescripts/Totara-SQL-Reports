@@ -26,7 +26,11 @@ SELECT
 CONCAT(u.firstname,' ',u.lastname) AS 'learner',
 attempts.id AS 'attemptid',
 quiz.id AS 'quiz',
-prog.fullname AS 'program'
+prog.fullname AS 'program',
+cm.id AS 'moduleid',
+gg.id AS 'gg',
+gi.id AS 'gi',
+gg.feedback AS 'feedback'
 
 
 FROM mdl_quiz_attempts AS attempts
@@ -54,26 +58,28 @@ LEFT JOIN mdl_prog AS prog
 	ON progua.programid = prog.id
 
 
-JOIN mdl_grade_items AS gi
+LEFT JOIN mdl_grade_items AS gi
 	ON c.id = gi.courseid
 	AND quiz.id = gi.iteminstance
+
 
 JOIN mdl_grade_grades AS gg
 	ON gi.id = gg.itemid
 	AND attempts.userid = gg.userid
 
-JOIN mdl_course_modules AS cm
-	ON attempts.quiz = cm.instance
+
+LEFT JOIN mdl_course_modules AS cm
+	ON gi.iteminstance = cm.instance
+	AND c.id = cm.course
+
 
 LEFT JOIN mdl_quiz_overrides AS qover
 	ON attempts.quiz = qover.quiz
 	AND attempts.userid = qover.userid
-	
-*/
 
 WHERE attempts.timefinish > 1634027059
 AND attempts.attempt >= 4
-/*AND (qover.attempts IS NULL OR attempts.attempt = qover.attempts)
-AND (gg.feedback IS NULL OR gg.feedback NOT LIKE '%on hold%')*/
+AND (qover.attempts IS NULL OR attempts.attempt = qover.attempts)
+/*AND (gg.feedback IS NULL OR gg.feedback NOT LIKE '%on hold%')*/
 
 ORDER BY attempts.timefinish DESC
