@@ -26,7 +26,7 @@ SELECT
 CONCAT(u.firstname,' ',u.lastname) AS 'learner',
 attempts.id AS 'attemptid',
 quiz.id AS 'quiz',
-quiz.course AS 'course'
+prog.fullname AS 'program'
 
 
 FROM mdl_quiz_attempts AS attempts
@@ -38,36 +38,38 @@ JOIN mdl_quiz AS quiz
 	ON attempts.quiz = quiz.id
 
 JOIN mdl_course AS c
-	ON quiz.course
+	ON c.id = quiz.course
 
-/*JOIN mdl_grade_items AS gi
-	ON quiz.course = gi.courseid
-	AND attempts.quiz = gi.iteminstance
+JOIN mdl_prog_courseset_course AS pcsc
+	ON c.id = pcsc.courseid
 
-JOIN mdl_grade_grades AS gg=	
-	ON gi.id = gg.itemid
-	AND attempts.userid = gg.userid*/
+JOIN mdl_prog_courseset AS pc
+	ON pcsc.coursesetid = pc.id
 
-JOIN mdl_prog_courseset_course AS pcc
-	ON c.id = pcc.courseid
-
-/*JOIN mdl_prog_courseset AS pc
-	ON pcc.coursesetid = pc.id
-	AND progua.programid = pc.programid
-
-JOIN mdl_prog AS prog
-	ON pc.programid = prog.id
-	AND progua.programid = prog.id
-	
 JOIN mdl_prog_user_assignment AS progua
-	ON attempts.userid = progua.userid
+	ON pc.programid = progua.programid
+	AND attempts.userid = progua.userid
+
+LEFT JOIN mdl_prog AS prog
+	ON progua.programid = prog.id
+
+
+JOIN mdl_grade_items AS gi
+	ON c.id = gi.courseid
+	AND quiz.id = gi.iteminstance
+
+JOIN mdl_grade_grades AS gg
+	ON gi.id = gg.itemid
+	AND attempts.userid = gg.userid
 
 JOIN mdl_course_modules AS cm
 	ON attempts.quiz = cm.instance
 
 LEFT JOIN mdl_quiz_overrides AS qover
 	ON attempts.quiz = qover.quiz
-	AND attempts.userid = qover.userid*/
+	AND attempts.userid = qover.userid
+	
+*/
 
 WHERE attempts.timefinish > 1634027059
 AND attempts.attempt >= 4
