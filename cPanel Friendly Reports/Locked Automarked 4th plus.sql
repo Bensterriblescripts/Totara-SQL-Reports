@@ -35,11 +35,16 @@ gg.feedback AS 'feedback'
 
 FROM mdl_quiz_attempts AS attempts
 
-JOIN mdl_user AS u
-	ON attempts.userid = u.id
-
 JOIN mdl_quiz AS quiz
 	ON attempts.quiz = quiz.id
+
+JOIN mdl_user AS u
+	ON attempts.userid = u.id
+	AND u.suspended = 0
+
+LEFT JOIN mdl_quiz_overrides AS qover
+	ON attempts.quiz = qover.quiz
+	AND attempts.userid = qover.userid
 
 JOIN mdl_course AS c
 	ON c.id = quiz.course
@@ -57,29 +62,28 @@ JOIN mdl_prog_user_assignment AS progua
 LEFT JOIN mdl_prog AS prog
 	ON progua.programid = prog.id
 
-
 LEFT JOIN mdl_grade_items AS gi
 	ON c.id = gi.courseid
 	AND quiz.id = gi.iteminstance
 
-
-JOIN mdl_grade_grades AS gg
+LEFT JOIN mdl_grade_grades AS gg
 	ON gi.id = gg.itemid
 	AND attempts.userid = gg.userid
-
 
 LEFT JOIN mdl_course_modules AS cm
 	ON gi.iteminstance = cm.instance
 	AND c.id = cm.course
 
-
-LEFT JOIN mdl_quiz_overrides AS qover
-	ON attempts.quiz = qover.quiz
-	AND attempts.userid = qover.userid
-
 WHERE attempts.timefinish > 1634027059
 AND attempts.attempt >= 4
+/*AND (attempts.sumgrades/quiz.sumgrades*100,1) = (gg.finalgrade,1)*/
+AND quiz.preferredbehaviour != 'deferredfeedback'
+AND (gg.feedback IS NULL OR gg.feedback NOT LIKE '%on hold%')
 AND (qover.attempts IS NULL OR attempts.attempt = qover.attempts)
-/*AND (gg.feedback IS NULL OR gg.feedback NOT LIKE '%on hold%')*/
+AND prog.fullname IS NOT NULL
+AND prog.fullname != 'Business (First Line Management) (Level 4)'
+AND ROUND(attempts.sumgrades/quiz.sumgrades * 10),1 = ROUND(gg.finalgrade)
+
+
 
 ORDER BY attempts.timefinish DESC
