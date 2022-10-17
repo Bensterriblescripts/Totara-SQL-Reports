@@ -31,8 +31,7 @@ LEFT JOIN prefix_course_modules_completion cmc ON cmc.userid = u.id AND cmc.cour
 INNER JOIN prefix_prog_courseset pcs ON pcs.programid=prog.id 
 INNER JOIN prefix_prog_courseset_course pcsc ON pcsc.coursesetid = pcs.id AND pcsc.courseid = c.id
 
-/*INNER JOIN prefix_user_info_data cuid on cuid.userid = cu.id and uid.data = cuid.data
-*/
+/*INNER JOIN prefix_user_info_data cuid on cuid.userid = cu.id and uid.data = cuid.data*/
 WHERE 
 quiz.preferredbehaviour = 'deferredfeedback'
 AND (UNIX_TIMESTAMP() - attempts.timefinish)/86400 <= 7
