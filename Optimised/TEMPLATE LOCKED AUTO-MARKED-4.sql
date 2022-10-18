@@ -1,7 +1,6 @@
-SELECT
-DISTINCT
+SELECT DISTINCT
 CONCAT('<strong><p ', IF(ROUND((UNIX_TIMESTAMP() - attempt_join.timefinish)/86400,0) > 1, 'style="color:\ red">', ''), IF(ROUND((UNIX_TIMESTAMP() - attempt_join.timefinish)/86400,0) <= 1, 'style="color:\ green">', ''),'<span class="accesshide" >', CAST(attempt_join.timefinish as CHAR), '</span>', DATE_FORMAT(FROM_UNIXTIME(attempt_join.timefinish),'%d %M %Y %H:%i:%s'), '</p></strong>') AS 'Submitted',
-concat('<a target="_new" href = "https://elearning.mito.org.nz/user/profile.php?id=', CAST(attempt_join.userid AS CHAR), '">',attempt_join.firstname, ' ', attempt_join.lastname, '</a><hr><a target="_new" href = "https://mitocrm.mito.org.nz/main.aspx?etc=2&extraqs=formid%3d85b5f7f3-ac5a-4beb-95da-2fb3e6b50f38&id=%7b',attempt_join.idnumber,'%7d&pagetype=entityrecord">',attempt_join.username,'</a><hr>', attempt_join.phone1) As 'Learner',
+CONCAT('<a target="_new" href = "https://elearning.mito.org.nz/user/profile.php?id=', CAST(attempt_join.userid AS CHAR), '">',attempt_join.firstname, ' ', attempt_join.lastname, '</a><hr><a target="_new" href = "https://mitocrm.mito.org.nz/main.aspx?etc=2&extraqs=formid%3d85b5f7f3-ac5a-4beb-95da-2fb3e6b50f38&id=%7b',attempt_join.idnumber,'%7d&pagetype=entityrecord">',attempt_join.username,'</a><hr>', attempt_join.phone1) As 'Learner',
 CONCAT(attempt_join.department, '<hr>',attempt_join.phone2) As Employer,
 CONCAT(prog.fullname,'<hr><a target="_new" href = "https://elearning.mito.org.nz/course/view.php?id=', CAST(attempt_join.courseid AS CHAR), '">',CAST(attempt_join.fullname AS CHAR),'</a><hr><a target="_new" href = "https://elearning.mito.org.nz/mod/quiz/view.php?id=', CAST(attempt_join.coursemoduleid AS CHAR), '">',CAST(attempt_join.name AS CHAR),'</a>') AS 'Programme and course',
 CASE
@@ -10,7 +9,6 @@ CASE
 	ELSE
 		CONCAT('<a target="_new" href = "https://elearning.mito.org.nz/mod/quiz/overrideedit.php?action=adduser&cmid=', CAST(attempt_join.coursemoduleid AS CHAR), '&mode=user">Add override</a>') 
 END AS 'Add override (new)',
-/*CONCAT('<a target="_new" href = "https://elearning.mito.org.nz/mod/quiz/overrides.php?cmid=', CAST(attempt_join.coursemoduleid AS CHAR), '&mode=user">Add override</a>') AS 'Add override',*/
 CONCAT('<a target="_new" href = "https://elearning.mito.org.nz/mod/quiz/review.php?attempt=', CAST(attempt_join.attemptid AS CHAR), '">',CAST(attempt_join.attempt AS CHAR),'</a>') AS 'Attempt',
 attempt_join.attempts AS 'Overrides',
 ROUND(attempt_join.sumgrades/attempt_join.quizgrades*100,1) AS Grade,
@@ -45,10 +43,6 @@ cm.id as coursemoduleid,
 attempts.attempt,
 cc.name as coursecategoryname,
 cc.path as coursecategorypath,
-/*qover.attempts 'override',
-DATE_FORMAT(FROM_UNIXTIME(attempts.timestart),'%d %M %Y %H:%i:%s') 'timestart',
-DATE_FORMAT(FROM_UNIXTIME(attempts.timefinish),'%d %M %Y %H:%i:%s') 'timefinish',
-*/
 attempts.timestart,
 attempts.timefinish,
 attempts.sumgrades,
@@ -61,10 +55,10 @@ cm.instance as instance
 FROM prefix_quiz_attempts attempts
 JOIN prefix_quiz quiz 
 	ON attempts.quiz=quiz.id 
-  		AND quiz.preferredbehaviour != 'deferredfeedback'
+  	AND quiz.preferredbehaviour != 'deferredfeedback'
 JOIN prefix_course_modules cm 
 	ON cm.instance=quiz.id
-JOIN prefix_user u 
+JOIN prefix_user AS u 
 	ON u.id = attempts.userid
 JOIN prefix_course c 
 	ON c.id = cm.course 
@@ -74,26 +68,25 @@ JOIN prefix_course_categories AS cc
 WHERE
 attempts.sumgrades/quiz.sumgrades < 1
 	AND u.suspended = 0
-  	AND u.username not in ('elearning.admin', 'mito2', 'mito_nzcr', 'mito_nzar', 'iclarke', 'evdemo', 'mito_suig', 'mito1', '773294@mymitonz.org.nz', '773288@mymitonz.org.nz', '773290@mymitonz.org.nz', 'demolearner', 'kahmad', 'mito_nzlv')
-    /*
-  	AND (cc.name = 'NZ Cert Auto engineering' OR cc.name = 'Startup' OR cc.name = 'Automotive Engineering Level 3' OR cc.name = 'Coachbuilding' OR cc.name = 'Outdoor Power Equipment' OR cc.name = 'Plant and equipment' OR cc.name = 'Automotive machining' OR cc.name = 'Collision repair' OR cc.name = 'Motorcycle') 
-	AND (prog.fullname NOT LIKE ('Commercial Road Transport Skills%' OR 'Commercial Road Transport (Heavy Vehicle Operator)%' OR 'Commercial Road Transport – Mass and Dimensions Micro-credential 2021-02 (Unfunded)'))
-  	AND cc.name not in ('COF', 'MotorTrain eLearning', 'NZ Cert CR and AR 2017', 'NZ Cert CR and AR 2021') 
-	*/	
+
+  	AND u.firstname NOT LIKE 'demo mito%'
+    AND u.firstname NOT LIKE 'mitolms%'
+
   	AND attempts.attempt >= 4
   	%%FILTER_SUBCATEGORIES:cc.path%%
 
 ) as sql_embed
   
-LEFT JOIN prefix_quiz_overrides qover 
-	ON qover.quiz = sql_embed.quizid AND qover.userid = sql_embed.userid 
-WHERE (qover.attempts is null OR qover.attempts = sql_embed.attempt)
+LEFT JOIN prefix_quiz_overrides AS qover 
+	ON qover.quiz = sql_embed.quizid 
+	AND qover.userid = sql_embed.userid 
+WHERE (qover.attempts IS NULL OR qover.attempts = sql_embed.attempt)
   
  ) AS attempt_join
 
-
 LEFT JOIN 
-	(select
+	(
+    SELECT
 	context.instanceid,
 	ita.firstname,
 	ita.lastname,
@@ -103,25 +96,23 @@ LEFT JOIN
 		ON ra.contextid = context.id
 	INNER JOIN prefix_user ita 
 		ON ita.id = ra.userid 
-			AND ita.email like '%@mito.org.nz' 
-	/*
-	WHERE context.instanceid = attempt_join.userid
-	*/
-	) as ita
+		AND ita.email like '%@mito.org.nz' 
+	) AS ita
 	ON ita.instanceid = attempt_join.userid
-JOIN prefix_grade_items gi 
+
+JOIN prefix_grade_items AS gi 
 	ON gi.iteminstance = attempt_join.instance 
-		AND gi.courseid = attempt_join.courseid
+	AND gi.courseid = attempt_join.courseid
 JOIN prefix_grade_grades gg 
 	ON gg.itemid = gi.id 
-		AND gg.userid = attempt_join.userid 
-		AND gg.finalgrade < 10
+	AND gg.userid = attempt_join.userid 
+	AND gg.finalgrade < 10
 JOIN prefix_prog_user_assignment AS progua 
 	ON progua.userid = attempt_join.userid 
 JOIN prefix_prog AS prog ON prog.id = progua.programid
 	AND prog.fullname IS NOT NULL
 	AND prog.fullname != 'Business (First Line Management) (Level 4)'
-JOIN prefix_enrol enrol 
+JOIN prefix_enrol AS enrol 
 	ON enrol.courseid = attempt_join.courseid
 JOIN prefix_user_enrolments ue 
 	ON ue.userid = attempt_join.userid 
@@ -133,11 +124,9 @@ JOIN prefix_prog_courseset_course pcsc
 	ON pcsc.coursesetid = pcs.id AND pcsc.courseid = attempt_join.courseid
 
 
-WHERE 
-(gg.feedback IS NULL 
-	OR gg.feedback NOT LIKE '%ON HOLD%'
-)
+WHERE (gg.feedback IS NULL OR gg.feedback NOT LIKE '%ON HOLD%')
 
 
 ORDER BY 
 attempt_join.timefinish ASC, attempt_join.firstname, attempt_join.fullname, attempt_join.name, attempt_join.attempt
+
