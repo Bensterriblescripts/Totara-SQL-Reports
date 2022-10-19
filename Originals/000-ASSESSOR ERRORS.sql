@@ -39,7 +39,7 @@ AND attempts.attempt = 1
 /*Admin users, Demo learenrs and test users are hidden from this queue*/
 AND u.username != 'elearning.admin'  AND u.username != 'mito2' AND u.username != 'mito_nzcr' AND u.username != 'mito_nzar' AND u.username != 'mito1' AND u.username != 'mito_nzlv'
 AND u.username != '773294@mymitonz.org.nz' AND u.username != '773288@mymitonz.org.nz' AND u.username != '773290@mymitonz.org.nz' AND u.username != 'demolearner'
-
+AND u.username != 'gbalasuriya' AND u.username != 'hclark' AND u.username != 'kahmad' AND u.username != 'mito_nzlv' 
 /**/
 
 ORDER BY p.timecompleted
