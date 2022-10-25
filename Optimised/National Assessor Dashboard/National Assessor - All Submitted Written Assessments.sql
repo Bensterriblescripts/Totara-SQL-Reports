@@ -20,15 +20,13 @@ JOIN prefix_user AS u
 	ON quizattempt.userid = u.id
 JOIN prefix_quiz AS quiz
 	ON quizattempt.quizid = quiz.id
-JOIN prefix_course AS c
-	ON quiz.course = c.id
 JOIN prefix_block_mitoassessor_learnercompl AS lprog
 	ON c.id = lprog.courseid
+	AND quizattempt.userid = lprog.userid
+JOIN prefix_course AS c
+	ON quiz.course = c.id
 LEFT JOIN prefix_quiz_attempts AS attempts
 	ON u.id = attempts.userid
 	AND quiz.id = attempts.quiz
 
-WHERE quiz.preferredbehaviour = 'deferredfeedback'
-AND u.suspended = 0
-
-ORDER BY quizattempt.id DESC
+ORDER BY attempts.timemodified DESC
