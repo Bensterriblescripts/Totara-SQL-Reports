@@ -1,177 +1,177 @@
 <script>
-$.fn.checkRecords = function(){
-	let tdcount = $(this).parent();
-	let totalrecords = $(tdcount).find("#totalrecords");
-	let totalrecordstext = $(totalrecords).text();
-	let msg = $("<em></em>").html("No records in queue");
-	$(msg).css("color", "gray");
-	if (totalrecordstext.includes("=")){
-			console.log("Records text: " + totalrecordstext);
-		} else {
-			console.log("Nothing to see here" + totalrecordstext);
-			$(this).append(msg);
-		}
-}
-$(document).ready(function(){
-	$("#NAwrittentomark").load("/blocks/configurable_reports/viewreport.php?id=354 #totalrecords", function(){
-	$(this).checkRecords();
-	 });
-	$("#NAresits").load("/blocks/configurable_reports/viewreport.php?id=356 #totalrecords", function(){
-	$(this).checkRecords();
-	 });
-	$("#unassignedlearners").load("/blocks/configurable_reports/viewreport.php?id=237 #totalrecords", function(){
-	$(this).checkRecords();
-	 });
-	$("#crtunassignedlearners").load("/blocks/configurable_reports/viewreport.php?id=409 #totalrecords", function(){
-	$(this).checkRecords();
-	 });
-	$("#incorrectoverrides").load("/blocks/configurable_reports/viewreport.php?id=293 #totalrecords", function(){
-	$(this).checkRecords();
-	 });
-	$("#missingoverrides").load("/blocks/configurable_reports/viewreport.php?id=423 #totalrecords", function(){
-	$(this).checkRecords();
-	 });
-	$("#markedincorrectly").load("/blocks/configurable_reports/viewreport.php?id=460 #totalrecords", function(){
-	$(this).checkRecords();
-	 });
-	$("#dailysubmissions").load("/blocks/configurable_reports/viewreport.php?id=429 #totalrecords", function(){
-	$(this).checkRecords();
-	 });
-	$("#extendedaccess").load("/blocks/configurable_reports/viewreport.php?id=464 #totalrecords", function(){
-	$(this).checkRecords();
-	});
-});
-</script>
-
-<div id="NAresits"></div><table style="width:100%;">
-   <tbody>
-      <tr>
-         <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=354" target="_blank">1st attempt queue</a></td>
-         <td>
-            <div id="NAwrittentomark"></div>
-         </td>
-      </tr>
-      <tr>
-         <td><a href="/blocks/configurable_reports/viewreport.php?id=356" target="_blank">Resit queue</a></td>
-         
-      </tr>
-      <tr>
-         <td><a href="/blocks/configurable_reports/viewreport.php?id=355" target="_blank">Marked assessments</a></td>
-         <td>Preloading disabled</td>
-      </tr>
-   </tbody>
-</table>
-
-<hr>
-
-<table style="width:100%;">
-   <tbody>
-      <tr>
-         <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=384" target="_blank">All assessment attempts</a></td>
-         <td>
-            <div id="#"></div>
-         </td>
-      </tr>
-      <tr>
-         <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=402" target="_blank">Assessor activity</a></td>
-         <td>Preloading disabled</td>
-      </tr>
-<tr>
-         <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=551" target="_blank">Assessor activity - 2 years</a></td>
-         <td>Preloading disabled</td>
-      </tr>
-<tr>
-         <td style="width:50%;"><a href="https://elearning.mito.org.nz/totara/reportbuilder/report.php?id=102" target="_blank">Assessor allocation</a></td>
-      </tr>
-   </tbody>
-</table>
-
-<hr>
-
-<table style="width:100%;">
-   <tbody>
-      <tr>
-         <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=223" target="_blank">Group assignments (count)</a></td>
-         <td></td>
-      </tr>
-      <tr>
-         <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=224" target="_blank">Group assignments (detail)</a></td>
-         <td>Preloading disabled</td>
-      </tr>
-      <tr>
-         <td><a href="/blocks/configurable_reports/viewreport.php?id=237" target="_blank">Group assignments (unassigned)</a></td>
-         <td>
-            <div id="unassignedlearners"></div>
-         </td>
-      </tr>
-      <tr>
-         <td><a href="/blocks/configurable_reports/viewreport.php?id=409" target="_blank">CRT Group assignments (unassigned)</a></td>
-         <td>
-            <div id="crtunassignedlearners"></div>
-         </td>
-      </tr>
-   </tbody>
-</table>
-
-<hr>
-
-<table style="width:100%;">
-   <tbody>
-      <tr>
-         <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=293" target="_blank">Incorrect overrides</a></td>
-         <td>
-            <div id="incorrectoverrides"></div>
-         </td>
-      </tr>
-      <tr>
-         <td><a href="/blocks/configurable_reports/viewreport.php?id=423" target="_blank">Missing overrides</a></td>
-         <td>
-            <div id="missingoverrides"></div>
-         </td>
-      </tr>
-      <tr>
-         <td><a href="/blocks/configurable_reports/viewreport.php?id=460" target="_blank">Marked incorrectly</a></td>
-         <td>
-            <div id="markedincorrectly"></div>
-         </td>
-      </tr>
-   </tbody>
-</table>
-
-<hr>
-
-<table style="width:100%;">
-   <tbody>
-      <tr>
-         <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=429" target="_blank">Count of written assessments submitted per day</a></td>
-         <td>
-            <div id="dailysubmissions"></div>
-         </td>
-      </tr>
-      <tr>
-         <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=474" target="_blank">Monthly written assessments submissions</a></td>
-         <td>Preloading disabled</td>
-      </tr>
-   </tbody>
-</table>
-<hr>
-<table style="width:100%;">
-   <tbody>
-      <tr>
-         <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=464" target="_blank">Progress of learners in 'Extended access' groups (Expiring US)</a></td>
-         <td>
-            <div id="extendedaccess"></div>
-         </td>
-      </tr>
-   </tbody>
-</table>
-<hr>
-<h4>Assessor induction</h4>
-<a href="/cohort/assign.php?id=580" target="_blank">Enrol assessors</a>
-<p>
-   <a href="/blocks/configurable_reports/viewreport.php?id=450" target="_blank">Progress report</a>
-</p>
-<hr>
-<h4>Review</h4>
-<a href="/blocks/configurable_reports/viewreport.php?id=438" target="_blank">Question attempt results</a>
-<p></p>
+   $.fn.checkRecords = function(){
+      let tdcount = $(this).parent();
+      let totalrecords = $(tdcount).find("#totalrecords");
+      let totalrecordstext = $(totalrecords).text();
+      let msg = $("<em></em>").html("No records in queue");
+      $(msg).css("color", "gray");
+      if (totalrecordstext.includes("=")){
+            console.log("Records text: " + totalrecordstext);
+         } else {
+            console.log("Nothing to see here" + totalrecordstext);
+            $(this).append(msg);
+         }
+   }
+   $(document).ready(function(){
+      $("#NAwrittentomark").load("/blocks/configurable_reports/viewreport.php?id=354 #totalrecords", function(){
+      $(this).checkRecords();
+       });
+      $("#NAresits").load("/blocks/configurable_reports/viewreport.php?id=356 #totalrecords", function(){
+      $(this).checkRecords();
+       });
+      $("#unassignedlearners").load("/blocks/configurable_reports/viewreport.php?id=237 #totalrecords", function(){
+      $(this).checkRecords();
+       });
+      $("#crtunassignedlearners").load("/blocks/configurable_reports/viewreport.php?id=409 #totalrecords", function(){
+      $(this).checkRecords();
+       });
+      $("#incorrectoverrides").load("/blocks/configurable_reports/viewreport.php?id=293 #totalrecords", function(){
+      $(this).checkRecords();
+       });
+      $("#missingoverrides").load("/blocks/configurable_reports/viewreport.php?id=423 #totalrecords", function(){
+      $(this).checkRecords();
+       });
+      $("#markedincorrectly").load("/blocks/configurable_reports/viewreport.php?id=460 #totalrecords", function(){
+      $(this).checkRecords();
+       });
+      $("#dailysubmissions").load("/blocks/configurable_reports/viewreport.php?id=429 #totalrecords", function(){
+      $(this).checkRecords();
+       });
+      $("#extendedaccess").load("/blocks/configurable_reports/viewreport.php?id=464 #totalrecords", function(){
+      $(this).checkRecords();
+      });
+   });
+   </script>
+   
+   <div id="NAresits"></div><table style="width:100%;">
+      <tbody>
+         <tr>
+            <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=354" target="_blank">1st attempt queue</a></td>
+            <td>
+               <div id="NAwrittentomark"></div>
+            </td>
+         </tr>
+         <tr>
+            <td><a href="/blocks/configurable_reports/viewreport.php?id=356" target="_blank">Resit queue</a></td>
+            
+         </tr>
+         <!-- <tr>
+            <td><a href="/blocks/configurable_reports/viewreport.php?id=355" target="_blank">Marked assessments</a></td>
+            <td>Preloading disabled</td>
+         </tr> -->
+      </tbody>
+   </table>    
+   
+   <hr>
+   
+   <table style="width:100%;">
+      <tbody>
+         <!-- <tr>
+            <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=384" target="_blank">All assessment attempts</a></td>
+            <td>
+               <div id="#"></div>
+            </td>
+         </tr>
+         <tr>
+            <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=402" target="_blank">Assessor activity</a></td>
+            <td>Preloading disabled</td>
+         </tr>
+         <tr>
+            <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=551" target="_blank">Assessor activity - 2 years</a></td>
+            <td>Preloading disabled</td>
+         </tr> -->
+         <tr>
+            <td style="width:50%;"><a href="https://elearning.mito.org.nz/totara/reportbuilder/report.php?id=102" target="_blank">Assessor allocation</a></td>
+         </tr>
+      </tbody>
+   </table>
+   
+   <hr>
+   
+   <table style="width:100%;">
+      <tbody>
+         <tr>
+            <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=223" target="_blank">Group assignments (count)</a></td>
+            <td></td>
+         </tr>
+         <tr>
+            <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=224" target="_blank">Group assignments (detail)</a></td>
+            <td>Preloading disabled</td>
+         </tr>
+         <tr>
+            <td><a href="/blocks/configurable_reports/viewreport.php?id=237" target="_blank">Group assignments (unassigned)</a></td>
+            <td>
+               <div id="unassignedlearners"></div>
+            </td>
+         </tr>
+         <tr>
+            <td><a href="/blocks/configurable_reports/viewreport.php?id=409" target="_blank">CRT Group assignments (unassigned)</a></td>
+            <td>
+               <div id="crtunassignedlearners"></div>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   
+   <hr>
+   
+   <table style="width:100%;">
+      <tbody>
+         <tr>
+            <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=293" target="_blank">Incorrect overrides</a></td>
+            <td>
+               <div id="incorrectoverrides"></div>
+            </td>
+         </tr>
+         <tr>
+            <td><a href="/blocks/configurable_reports/viewreport.php?id=423" target="_blank">Missing overrides</a></td>
+            <td>
+               <div id="missingoverrides"></div>
+            </td>
+         </tr>
+         <tr>
+            <td><a href="/blocks/configurable_reports/viewreport.php?id=460" target="_blank">Marked incorrectly</a></td>
+            <td>
+               <div id="markedincorrectly"></div>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   
+   <hr>
+   
+   <table style="width:100%;">
+      <tbody>
+         <tr>
+            <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=429" target="_blank">Count of written assessments submitted per day</a></td>
+            <td>
+               <div id="dailysubmissions"></div>
+            </td>
+         </tr>
+         <tr>
+            <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=474" target="_blank">Monthly written assessments submissions</a></td>
+            <td>Preloading disabled</td>
+         </tr>
+      </tbody>
+   </table>
+   <hr>
+   <table style="width:100%;">
+      <tbody>
+         <tr>
+            <td style="width:50%;"><a href="/blocks/configurable_reports/viewreport.php?id=464" target="_blank">Progress of learners in 'Extended access' groups (Expiring US)</a></td>
+            <td>
+               <div id="extendedaccess"></div>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <hr>
+   <h4>Assessor induction</h4>
+   <a href="/cohort/assign.php?id=580" target="_blank">Enrol assessors</a>
+   <p>
+      <a href="/blocks/configurable_reports/viewreport.php?id=450" target="_blank">Progress report</a>
+   </p>
+   <hr>
+   <h4>Review</h4>
+   <a href="/blocks/configurable_reports/viewreport.php?id=438" target="_blank">Question attempt results</a>
+   <p></p>
