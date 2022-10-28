@@ -1,57 +1,59 @@
-SELECT DISTINCT 
-CONCAT('<strong><p ', IF(ROUND((UNIX_TIMESTAMP() - attempts.timefinish)/86400,0) > 14, 'style="color:\ red">', ''), IF(ROUND((UNIX_TIMESTAMP() - attempts.timefinish)/86400,0) <= 14 AND ROUND((UNIX_TIMESTAMP() - attempts.timefinish)/86400,0) > 3, 'style="color:\ orange">', ''),IF(ROUND((UNIX_TIMESTAMP() - attempts.timefinish)/86400,0) <= 3, 'style="color:\ green">', ''),'<span class="accesshide" >', CAST(attempts.timefinish as CHAR), '</span>', DATE_FORMAT(FROM_UNIXTIME(attempts.timefinish),'%d %M %Y %H:%i:%s'), '</p></strong>') AS 'Submitted',
-CONCAT('<a target="_new" href = "https://elearning.mito.org.nz/user/profile.php?id=', CAST(u.id AS CHAR), '">',u.firstname, ' ', u.lastname, '</a><hr><a target="_new" href = "https://mitocrm.mito.org.nz/main.aspx?etc=2&extraqs=formid%3d85b5f7f3-ac5a-4beb-95da-2fb3e6b50f38&id=%7b',u.idnumber,'%7d&pagetype=entityrecord">',u.username,'</a><hr>', u.phone1) As 'Learner',
+SELECT
+
+CONCAT('<span class="accesshide" >', CAST(gg.timecreated as CHAR), '</span>', DATE_FORMAT(FROM_UNIXTIME(gg.timecreated),'%d %M %Y %H:%i:%s')) AS 'Submitted',
+CONCAT('<span class="accesshide" >', CAST(gg.timemodified as CHAR), '</span>', DATE_FORMAT(FROM_UNIXTIME(gg.timemodified),'%d %M %Y %H:%i:%s')) AS 'Graded',
+CONCAT('<a target="_new" href = "https://elearning.mito.org.nz/user/profile.php?id=', CAST(u.id AS CHAR), '">',u.firstname, ' ', u.lastname, '</a><hr><a target="_new" href = "https://crm.mito.org.nz/MITOCRM/main.aspx?etc=2&extraqs=formid%3d85b5f7f3-ac5a-4beb-95da-2fb3e6b50f38&id=%7b',u.idnumber,'%7d&pagetype=entityrecord">',u.username,'</a><hr>', u.phone1) As 'Learner',
 CONCAT(u.department, '<hr>',u.phone2) As Employer,
-CONCAT('<a target="_new" href = "https://elearning.mito.org.nz/course/view.php?id=', CAST(c.id AS CHAR), '">',CAST(c.fullname AS CHAR),'</a><hr><a target="_new" href = "https://elearning.mito.org.nz/mod/quiz/view.php?id=', CAST(cm.id AS CHAR), '">',CAST(quiz.name AS CHAR),'</a>') AS 'Assessment', 
-attempts.attempt AS attempt,
-CONCAT('<a target="_new" href = "https://elearning.mito.org.nz/mod/quiz/review.php?attempt=', CAST(attempts.id AS CHAR), '">Grade attempt</a>') AS 'Grade',
-CONCAT('<a target="_new" href = "https://elearning.mito.org.nz/blocks/completionstatus/details.php?course=', CAST(c.id AS CHAR), '&user=',CAST(u.id AS CHAR),'">Check course progress</a><hr><a href="mailto:', u.email, '?cc=elearning@mito.org.nz&Subject=MITO eLearning - ', c.fullname, ' – ', quiz.name, '&body=Kia ora ',u.firstname, '%0D%0A%0D%0AI have marked your written assessment for the course ',c.fullname,'.%0D%0A%0D%0ACongratulations! You have passed the written assessment.%0D%0A%0D%0AHere\'s a link to the marked attempt: https://elearning.mito.org.nz/mod/quiz/review.php?attempt=',CAST(attempts.id AS CHAR),'">Send completed email (Outlook)</a>','<hr><a target="_new" href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=',u.email, '&cc=elearning@mito.org.nz&su=MITO eLearning - ', c.fullname, ' – ', quiz.name, '&body=Kia ora ',u.firstname, '%0D%0A%0D%0AI have marked your written assessment for the course ',c.fullname,'.%0D%0A%0D%0ACongratulations! You have passed the written assessment.%0D%0A%0D%0AHere\'s a link to the marked attempt: https://elearning.mito.org.nz/mod/quiz/review.php?attempt=',CAST(attempts.id AS CHAR),'">Send completed email (Gmail)</a>') AS 'Passed Actions', 
-CONCAT('<a target="_new" href = "https://elearning.mito.org.nz/mod/quiz/overrides.php?cmid=', CAST(cm.id AS CHAR), '&mode=user">Add override</a><hr><a href="mailto:', u.email, '?cc=elearning@mito.org.nz&Subject=MITO eLearning - ', c.fullname, ' – ', quiz.name, '&body=Kia ora ',u.firstname, '%0D%0A%0D%0AI have marked your written assessment for the course ',c.fullname,'.%0D%0A%0D%0AUnfortunately you have not provided sufficient answers for all of the questions.%0D%0A%0D%0AI have added comments to the assessment where you need to provide additional information.%0D%0A%0D%0AHere\'s a link to the marked attempt: https://elearning.mito.org.nz/mod/quiz/review.php?attempt=',CAST(attempts.id AS CHAR),'%0D%0A%0D%0AYou will need to start a new attempt and re-do any questions that you did not pass on your earlier attempt (you do not need to add anything to questions that were marked correct).%0D%0A%0D%0APlease reply to this email if you have any questions.','">Send failed email (Outlook)</a>','<hr><a target="_new" href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=',u.email, '&cc=elearning@mito.org.nz&su=MITO eLearning - ', c.fullname, ' – ', quiz.name, '&body=Kia ora ',u.firstname, '%0D%0A%0D%0AI have marked your written assessment for the course ',c.fullname,'.%0D%0A%0D%0AUnfortunately you have not provided sufficient answers for all of the questions.%0D%0A%0D%0AI have added comments to the assessment where you need to provide additional information.%0D%0A%0D%0AHere\'s a link to the marked attempt: https://elearning.mito.org.nz/mod/quiz/review.php?attempt=',CAST(attempts.id AS CHAR),'%0D%0A%0D%0AYou will need to start a new attempt and re-do any questions that you did not pass on your earlier attempt (you do not need to add anything to questions that were marked correct).%0D%0A%0D%0APlease reply to this email if you have any questions.','">Send failed email (Gmail)</a>') AS 'Failed Actions'
-FROM prefix_quiz_attempts AS attempts
-JOIN prefix_quiz AS quiz 
-    ON attempts.quiz = quiz.id
-JOIN prefix_course_modules AS cm 
-    ON cm.instance = quiz.id
-JOIN prefix_user AS u 
-    ON u.id = attempts.userid
-LEFT JOIN prefix_quiz_overrides AS qover 
-    ON qover.quiz = quiz.id 
-    AND qover.userid = u.id
-JOIN prefix_course AS c 
-    ON c.id = cm.course 
-    AND quiz.course
-JOIN prefix_course_categories AS cc 
-    ON cc.id = c.category 
-JOIN prefix_grade_items AS gi 
-    ON gi.iteminstance = cm.instance 
-    AND gi.courseid = c.id
-JOIN prefix_grade_grades AS gg 
-    ON gg.itemid = gi.id 
-    AND gg.userid = u.id
-LEFT JOIN prefix_prog_user_assignment AS progua 
-    ON progua.userid = u.id 
-LEFT JOIN prefix_prog AS prog 
-    ON prog.id = progua.programid
-LEFT JOIN prefix_user_info_data AS uid 
-    ON uid.userid = u.id
-LEFT JOIN prefix_user_info_field AS uif 
-    ON uid.fieldid = uif.id
-LEFT JOIN prefix_course_modules_completion cmc 
-    ON cmc.userid = u.id 
-    AND cmc.coursemoduleid = cm.id
+CONCAT(prog.fullname,'<hr><a target="_new" href = "https://elearning.mito.org.nz/course/view.php?id=', CAST(c.id AS CHAR), '">',CAST(c.fullname AS CHAR),'</a><hr><a target="_new" href = "https://elearning.mito.org.nz/mod/quiz/view.php?id=', CAST(gi.itemmodule AS CHAR), '">',CAST(quiz.name AS CHAR),'</a>') AS 'Programme and course',
+qs.userattempts AS 'Attempt',
+qs.useroverrides AS 'Overrides',
+qs.grade AS 'Grade',
+CONCAT('<a target="_new" href = "%%WWWROOT%%/mod/quiz/review.php?attempt=', CAST(attempts.id AS CHAR), '">View attempt</a>') AS 'View attempt',
+CONCAT('<a target="_new" href = "%%WWWROOT%%/mod/quiz/overrides.php?cmid=', CAST(gi.itemmodule AS CHAR), '&mode=user">Add override</a>') AS 'Add override'
 
-WHERE 
-(cc.name = 'MITO Staff FLM' or cc.name = 'FLM')
-AND quiz.preferredbehaviour = 'deferredfeedback'
-AND attempts.timefinish != 0
-AND (gg.finalgrade < 10 or gg.finalgrade IS NULL)
-AND (cmc.completionstate IS NULL OR (cmc.completionstate!= 1 AND cmc.completionstate != 2))
-AND (attempts.attempt >= 1 AND qover.attempts IS NULL)
+FROM mdl_grade_grades AS gg
 
-AND u.username != 'elearning.admin'  AND u.username != 'mito2' AND u.username != 'mito_nzcr' AND u.username != 'mito_nzar' AND u.username != 'mito_nzlv' AND u.username != 'mito_suig'
+JOIN mdl_grade_items AS gi
+	ON gg.itemid = gi.id
+JOIN mdl_block_mitoassessor_quizstatus AS qs
+	ON gi.iteminstance = qs.quizid
+    AND gg.userid = qs.userid
+JOIN mdl_user AS u 
+	ON qs.userid = u.id
+JOIN mdl_course AS c
+	ON gi.courseid = c.id
+JOIN mdl_quiz AS quiz
+	ON quiz.id = qs.quizid
+JOIN mdl_block_mitoassessor_learnercompl AS lc
+	ON qs.userid = lc.userid
+	AND c.id = lc.courseid
+JOIN mdl_prog AS prog
+	ON lc.programid = prog.id
+JOIN mdl_quiz_attempts AS attempts
+	ON qs.userid = attempts.userid
+    AND qs.quizid	= attempts.quiz
+    AND qs.userattempts = attempts.attempt
+JOIN mdl_prog_courseset AS pcs
+	ON pcs.programid = prog.id
+JOIN mdl_prog_courseset_course AS pcsc
+	ON pcsc.coursesetid = pcs.id 
+	AND pcsc.courseid = lc.courseid
 
-AND prog.fullname IS NOT NULL 
+WHERE quiz.preferredbehaviour = 'deferredfeedback'
+AND gg.timemodified IS NOT NULL
+AND gg.timecreated IS NOT NULL
+AND gg.finalgrade < 10
+AND u.suspended != 0
+AND prog.fullname IS NOT NULL
+AND lc.status != 0
+AND qs.userattempts >= qs.useroverrides
+AND attempts.sumgrades IS NOT NULL
+AND attempts.timefinish !=0
 
-AND u.suspended = 0
 
-ORDER BY attempts.timefinish ASC, u.firstname, c.fullname, quiz.name
+/*Demo, admins and other non-learner accounts*/
+AND u.username != 'elearning.admin'  AND u.username != 'mito2' AND u.username != 'mitotester2' AND u.username != 'mito_nzcr' AND u.username != 'mito_nzar' AND u.username != 'mito1' AND u.username != 'mito_nzlv' AND u.username != 'mito_suig'
+AND u.username != '773294@mymitonz.org.nz' AND u.username != '773288@mymitonz.org.nz' AND u.username != '773290@mymitonz.org.nz' AND u.username != 'demolearner'
+AND u.username != 'gbalasuriya' AND u.username != 'hclark' AND u.username != 'kahmad'
+
+-- ORDER BY gg.timemodified DESC
