@@ -1,27 +1,55 @@
-<script>
-$(document).ready(function(){
-$("#target").load("/blocks/configurable_reports/viewreport.php?id=242 #sendemail");
-});
-</script>
+SELECT
+CONCAT('<span class="accesshide" >', CAST(attempts.timefinish as CHAR), '</span>', DATE_FORMAT(FROM_UNIXTIME(attempts.timefinish),'%d %M %Y %H:%i:%s')) AS 'Submitted',
+CONCAT('<span class="accesshide" >', CAST(gg.timemodified as CHAR), '</span>', DATE_FORMAT(FROM_UNIXTIME(gg.timemodified),'%d %M %Y %H:%i:%s')) AS 'Graded',
+CONCAT('<a target="_new" href = "%%WWWROOT%%/user/profile.php?id=', CAST(u.id AS CHAR), '">',u.firstname, ' ', u.lastname, '</a><hr><a target="_new" href = "https://crm.mito.org.nz/MITOCRM/main.aspx?etc=2&extraqs=formid%3d85b5f7f3-ac5a-4beb-95da-2fb3e6b50f38&id=%7b',u.idnumber,'%7d&pagetype=entityrecord">',u.username,'</a><hr>', u.phone1) As 'Learner',
+CONCAT(prog.fullname,'<hr><a target="_new" href = "%%WWWROOT%%/course/view.php?id=', CAST(c.id AS CHAR), '">',CAST(c.fullname AS CHAR),'</a><hr><a target="_new" href = "%%WWWROOT%%/mod/quiz/view.php?id=', CAST(cm.id AS CHAR), '">',CAST(quiz.name AS CHAR),'</a>') AS 'Programme and course',
+attempts.attempt AS 'Attempt',
+qover.attempts AS 'Overrides',
+ROUND(attempts.sumgrades / quiz.sumgrades * 100, 1) AS 'Grade',
+CONCAT('<a target="_new" href = "%%WWWROOT%%/mod/quiz/review.php?attempt=', CAST(attempts.id AS CHAR), '">View attempt</a>') AS 'View attempt',
+CONCAT('<a target="_new" href = "%%WWWROOT%%/mod/quiz/overrides.php?cmid=', CAST(cm.id AS CHAR), '&mode=user">Add override</a>') AS 'Add override'
 
+FROM prefix_quiz_attempts AS attempts
+LEFT JOIN prefix_quiz AS quiz 
+	ON attempts.quiz = quiz.id
+LEFT JOIN prefix_course_modules AS cm 
+	ON cm.instance = quiz.id
+JOIN prefix_user AS u 
+	ON u.id = attempts.userid
+LEFT JOIN prefix_quiz_overrides AS qover 
+	ON qover.userid = attempts.userid
+	AND qover.quiz = quiz.id
+LEFT JOIN prefix_course AS c 
+	ON c.id = cm.course
+LEFT JOIN prefix_grade_items AS gi 
+	ON gi.iteminstance = cm.instance
+    AND gi.courseid = c.id
+JOIN prefix_grade_grades AS gg 
+	ON gg.itemid = gi.id 
+    AND gg.userid = u.id
+LEFT JOIN prefix_prog_user_assignment AS progua 
+	ON progua.userid = u.id 
+LEFT JOIN prefix_prog AS prog 
+	ON prog.id = progua.programid
+LEFT JOIN prefix_course_modules_completion AS cmc 
+	ON cmc.userid = u.id 
+    AND cmc.coursemoduleid = cm.id
+JOIN prefix_prog_courseset AS pcs 
+	ON pcs.programid = prog.id
+JOIN prefix_prog_courseset_course AS pcsc 
+	ON pcsc.coursesetid = pcs.id 
+    AND pcsc.courseid = c.id
 
+WHERE quiz.preferredbehaviour = 'deferredfeedback'
+AND attempts.attempt >= 
+CASE 
+	WHEN qover.attempts IS NULL THEN 0
+	ELSE qover.attempts
+END
+AND c.category != 10
+AND attempts.sumgrades IS NOT NULL
+AND cmc.completionstate IS NULL
+AND gg.finalgrade < 10
+AND u.suspended = 0
 
-<div id="target"></div>
-<hr>
-<p><a href="/blocks/configurable_reports/managereport.php">Manage reports</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=84">All courses</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=439">All course modules</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=256">All programmes</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=379">Learner details</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=285">Learner activity</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=87">Audience enrolments</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=382">All locked auto-marked assessments</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=424">All written assessments to be graded</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=384">All written assessment attempts</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=374">eLearning course US information</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=387">URL activities</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=389">File activities</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=426">Written assessments in progress</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=473">Courses with CDX content</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=466">Scorm in courses with CDX content</a></p>
-<p><a href="/blocks/configurable_reports/viewreport.php?id=476">RPL completions of last 30 days</a></p>
+ORDER BY gg.timemodified ASC, u.firstname ASC
